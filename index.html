@@ -2,264 +2,251 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>メンギ語</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ジャンプゲーム</title>
     <style>
-        /* 2000年代アングラ個人サイトの完全再現 */
-        body {
-            background-color: #000000; /* 漆黒の闇 */
-            color: #00ff00;            /* 毒々しい蛍光グリーン */
-            font-family: "MS Gothic", "MS ゴシック", sans-serif;
-            margin: 30px;
-            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAG0lEQVQIW2M0hIL/DAwM4AAMMA5IEIsCBAkOAgAkBwEDEx99FwAAAABJRU5ErkJggg==');
-        }
-        
-        a {
-            color: #ff00ff; /* 邪悪なピンク */
-            text-decoration: underline;
-            cursor: pointer;
-        }
-        a:hover {
-            color: #ffff00; /* カーソルを合わせると黄色に光り、背景が赤くなる */
-            background-color: #ff0000;
-        }
-
-        /* 文字点滅ギミック */
-        blink {
-            animation: blink-animation 0.8s steps(5, start) infinite;
-            -webkit-animation: blink-animation 0.8s steps(5, start) infinite;
-        }
-        @keyframes blink-animation { to { visibility: hidden; } }
-        @-webkit-keyframes blink-animation { to { visibility: hidden; } }
-
-        /* ページの枠をすべて餃子の絵文字で囲むための外枠 */
-        .dumpling-border-container {
-            border: 8px double #ff00ff; /* ピンクのレトロな二重枠 */
-            background-color: #050505;
-            max-width: 750px;
-            margin: 0 auto;
-            padding: 10px;
-        }
-
-        /* メンギ語が降臨する魔法の祭壇 */
-        .mengi-altar, .database-box {
-            border: 6px double #00ff00; /* 二重線のレトロ枠 */
-            padding: 30px;
-            background-color: #111111;
-            max-width: 600px;
-            margin: 20px auto;
-            box-shadow: 0px 0px 15px #00ff00; /* 謎の発光エフェクト */
-        }
-
-        /* アクセスカウンター風デザイン */
-        .counter-box {
-            background-color: #222222;
-            border: 3px inset #ffffff;
-            color: #ff3300; /* 赤く光るデジタル数字風 */
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 26px;
-            font-weight: bold;
-            padding: 5px 15px;
-            letter-spacing: 4px;
-            display: inline-block;
-        }
-
-        hr {
-            border: 0;
-            border-top: 5px ridge #ff00ff; /* 禍々しいピンクの立体区切り線 */
-            margin: 25px 0;
-        }
-
-        marquee {
-            background-color: #111111;
-            border: 1px dashed #00ff00;
-            padding: 6px;
-            font-size: 14px;
-            color: #ffff00;
-        }
-
-        .banner-link {
-            border: 1px solid #ffffff;
-            padding: 5px;
-            background-color: #333333;
-            color: #ffffff;
-            font-size: 12px;
-            text-decoration: none;
-            display: inline-block;
-            width: 88px;
-            height: 31px;
-            line-height: 20px;
-            vertical-align: middle;
-        }
-
-        .dumpling-line {
-            font-size: 18px;
-            letter-spacing: 6px;
-            color: #ffffff;
-            margin: 5px 0;
-            user-select: none;
-        }
-
-        /* 過去ログ用のリストスタイル（先頭を餃子に） */
-        .mengi-list {
-            text-align: left;
-            font-size: 18px;
-            line-height: 2.2;
-            list-style-type: "🥟 "; 
-            padding-left: 30px;
-        }
+        body { margin: 0; padding: 0; background: #222; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; font-family: sans-serif; overflow: hidden; }
+        canvas { background: #333; box-shadow: 0 4px 15px rgba(0,0,0,0.5); cursor: pointer; }
+        .instructions { margin-top: 15px; font-size: 14px; color: #aaa; text-align: center; }
     </style>
 </head>
 <body>
 
-<center>
-
-<!-- ページ最上部の餃子枠 -->
-<div class="dumpling-line">🥟🥟🥟🥟🥟🥟🥟 ... THE WORLD OF MENGI ... 🥟🥟🥟🥟🥟🥟🥟</div>
-
-<div class="dumpling-border-container">
-    <div class="dumpling-line">🥟🥟🥟🥟🥟🥟 ... 🥟🥟🥟🥟🥟🥟</div>
-    
-    <!-- サイト名（ご指定通り「メンギ語」に完全統一） -->
-    <font size="7"><b>メンギ語</b></font><br>
-    <font size="2" color="#aaaaaa">since 2026/10/15（Last Update: <span id="last-update-date">2026/10/15</span>）</font>
-    
-    <hr>
-    
-    <!-- スクロールする謎のアナウンス -->
-    <marquee scrollamount="4">
-        【緊急警告】毎日午前10時、当館の祭壇に世界で誰も見たことがない「架空のメンギ語」が1単語だけ降臨します。この言葉に意味はありません。意味を決めるのはあなたです。SNSでの大喜利報告、お待ちしております･･･。
-    </marquee>
-
-    <hr>
-
-    <!-- 餃子の絵文字弾幕 -->
-    <p>
-        あなたは 
-        <br><br>
-        <div class="counter-box">000000900</div> 
-        <br><br>
-        人目のメンギ語目撃者です。<br>
-        <div class="dumpling-line">🥟🥟🥟🥟🥟🥟🥟🥟🥟🥟🥟🥟🥟🥟🥟🥟🥟</div>
-    </p>
-
-    <hr>
-
-    <!-- メイン画面：今日のメンギ語エリア -->
-    <div id="main-view">
-        <div class="mengi-altar">
-            <div class="dumpling-line" style="font-size:12px;">🥟🥟🥟🥟🥟🥟🥟🥟🥟🥟🥟🥟🥟</div>
-            <!-- 今日降臨した日付が自動で入る場所 -->
-            <font size="3" color="#ff00ff"><b>【降臨日時：<span id="today-date">2026/10/15</span> 10:00】</b></font><br><br>
-            <font size="4" color="#ffffff">ーー 本 日 降 臨 せ し メンギ 語 ーー</font>
-            <br><br><br>
-            
-            <!-- 最新の言葉が自動で入る場所 -->
-            <font size="7" color="#ffff00"><b><blink id="today-jp">【 メ ン ギ 】</blink></b></font>
-            <br><br>
-            <font size="3" color="#ffffff" id="today-en">（英表記：Mengi）</font>
-            
-            <br><br><br>
-            <hr style="border-top: 1px dashed #00ff00;">
-            <!-- 指定通りの注釈文言（大喜利・ミーム歓迎） -->
-            <p><font size="2" color="#888888">※この言葉の意味はまだこの世界に存在しません。あなたが自由に解釈して大喜利報告＆ネットミームなどご自由にご利用ください。</font></p>
-            <div class="dumpling-line" style="font-size:12px;">🥟🥟🥟🥟🥟🥟🥟 ... 🥟🥟🥟🥟🥟🥟🥟</div>
-        </div>
+    <canvas id="gameCanvas" width="800" height="400"></canvas>
+    <div class="instructions">
+        [Space] / 画面クリックでジャンプ・二段階ジャンプ / スタートします
     </div>
 
-    <!-- データベース画面：過去の遺物（倉庫） -->
-    <div id="database-view" style="display: none;">
-        <div class="database-box">
-            <div class="dumpling-line" style="font-size:12px;">🥟 ... 🥟</div>
-            <font size="5" color="#ff00ff"><b>◆ 過去のメンギ語・大倉庫 ◆</b></font>
-            <br><br>
-            <hr style="border-top: 1px dashed #ff00ff;">
-            <br>
-            <ul class="mengi-list" id="mengi-history-list">
-                <!-- ここに過去の履歴が日付付きで自動蓄積されます -->
-            </ul>
-            <br>
-            <hr style="border-top: 1px dashed #ff00ff;">
-            <br>
-            <a onclick="toggleView('main')">【 本日の祭壇へ戻る 】</a>
-            <br><br>
-            <div class="dumpling-line" style="font-size:12px;">🥟 ... 🥟</div>
-        </div>
-    </div>
-    
-    <hr>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
 
-    <!-- 地獄のメニュー表 -->
-    <table border="1" bordercolor="#ff00ff" cellspacing="0" cellpadding="10" bgcolor="#111111">
-        <tr>
-            <!-- 指定通りの謎フレーズ（ガオチャチャ） -->
-            <td><a onclick="alert('ガオチャチャ×22をスンダしたマーキーがススーッと通ります')">メンギ語とは？（設定）</a></td>
-            <td><a onclick="toggleView('database')">過去の遺物（倉庫）</a></td>
-            <td><a onclick="alert('工事中。管理人が多忙のためBBSは閉鎖されました。')">黒歴史BBS（掲示板）</a></td>
-            <td><a href="mailto:mengi-go@example.com">管理人へ文通（メール）</a></td>
-        </tr>
-    </table>
+        // --- ゲーム設定 ---
+        const playerSettings = {
+            x: 100,
+            y: 250,
+            width: 50,
+            height: 50,
+            gravity: 0.8,
+            jumpPower: -13,
+            doubleJumpPower: -11, // 二段階目のジャンプ力
+        };
 
-    <br><br>
-    
-    <!-- 2000年代定番の個人バナーエリア -->
-    <a href="#" class="banner-link" onclick="alert('相互リンク募集中！')">メンギ同盟</a>
-    <a href="#" class="banner-link" style="background-color:#000055; color:#00ffff;">IE6.0推奨</a>
-    <a href="#" class="banner-link" style="background-color:#550000; color:#ffaa00;">転載厳禁</a>
+        const groundLevel = 300;
+        const obstacleTypes = ['ground', 'ptera']; // 障害物の種類
 
-    <p><font size="2" color="#555555">Copyright (C) 2026 メンギ語保存協会 All Rights Reserved.</font></p>
-    
-    <div class="dumpling-line">🥟🥟 ... 🥟🥟</div>
-</div>
+        // --- ゲーム状態変数 ---
+        const player = { ...playerSettings, vy: 0, jumpCount: 0 };
+        let obstacles = [];
+        let gameSpeed = 5;
+        let score = 0;
+        let isStarted = false;
+        let isGameOver = false;
+        let nextObstacleTimer = 0;
 
-<!-- ページ最下部の餃子枠 -->
-<div class="dumpling-line">🥟🥟🥟🥟🥟🥟🥟🥟🥟 Lycka till Med Medamanyaki 🥟🥟🥟🥟🥟🥟🥟🥟</div>
+        // --- 画像読み込み ---
+        const charImage = new Image();
+        let imageLoaded = false;
+        charImage.onload = () => { imageLoaded = true; };
+        // 画像エラーフォールバック
+        charImage.onerror = () => {
+            if (charImage.src.endsWith('TTK_2.PNG')) charImage.src = 'TTK_2.png';
+            else if (charImage.src.endsWith('TTK_2.png')) charImage.src = 'TTK_2.jpg';
+        };
+        charImage.src = 'TTK_2.PNG';
 
-</center>
+        // --- 入力処理 ---
+        function triggerAction() {
+            if (!isStarted) {
+                isStarted = true;
+                resetGame();
+                return;
+            }
+            if (isGameOver) {
+                resetGame();
+                return;
+            }
 
-<!-- 🧠 データベース日付連動システム -->
-<script>
-    // 💡 【明日の朝からの手動更新作業はここだけ！】
-    // ブラウザのGitHub編集画面を開き、日付（date）、言葉（jp）、英名（en）の3つをセットにして
-    // 必ず【一番上（配列の先頭）】に1行ずつ追加していくだけです。
-    const mengiDatabase = [
-        { date: "2026/10/18", jp: "キミペンクツクツ", en: "Kimipen-Kutsukutsu" }, 
-        { date: "2026/10/17", jp: "アサーサー", en: "Asartha" },
-        { date: "2026/10/16", jp: "ワンセツ", en: "Wansetsu" },
-        { date: "2026/10/15", jp: "メンギ", en: "Mengi" } // 記念すべき第1回目
-    ];
-
-    // 画面切り替え処理
-    function toggleView(view) {
-        if (view === 'database') {
-            document.getElementById('main-view').style.display = 'none';
-            document.getElementById('database-view').style.display = 'block';
-        } else {
-            document.getElementById('main-view').style.display = 'block';
-            document.getElementById('database-view').style.display = 'none';
-        }
-    }
-
-    // ページ読み込み時の自動マッピング処理
-    window.onload = function() {
-        if (mengiDatabase.length > 0) {
-            const todayData = mengiDatabase[0]; // 一番上のデータを自動取得
-            
-            // トップページの情報を最新の言葉に自動書き換え
-            document.getElementById('today-date').innerText = todayData.date;
-            document.getElementById('last-update-date').innerText = todayData.date;
-            document.getElementById('today-jp').innerHTML = `【 ${todayData.jp} 】`;
-            document.getElementById('today-en').innerHTML = `（英表記：${todayData.en}）`;
+            // ジャンプ処理（二段階ジャンプ対応）
+            if (player.jumpCount < 2) {
+                if (player.jumpCount === 0) {
+                    player.vy = player.jumpPower; // 一段階目
+                } else {
+                    player.vy = player.doubleJumpPower; // 二段階目
+                }
+                player.jumpCount++;
+            }
         }
 
-        // 2番目以降の古いデータをすべて日付付きで過去ログ（倉庫）へ自動配置
-        const listContainer = document.getElementById('mengi-history-list');
-        for (let i = 1; i < mengiDatabase.length; i++) {
-            const li = document.createElement('li');
-            li.innerHTML = `<font color="#ffffff">[${mengiDatabase[i].date}]</font> <b>【 ${mengiDatabase[i].jp} 】</b> (英名: ${mengiDatabase[i].en})`;
-            listContainer.appendChild(li);
-        }
-    };
-</script>
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                triggerAction();
+            }
+        });
 
+        canvas.addEventListener('click', () => {
+            triggerAction();
+        });
+
+        // --- ゲームロジック ---
+        function resetGame() {
+            obstacles = [];
+            score = 0;
+            gameSpeed = 5;
+            isGameOver = false;
+            isStarted = true;
+            player.y = 250;
+            player.vy = 0;
+            player.jumpCount = 0;
+            nextObstacleTimer = 60;
+        }
+
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function createObstacle() {
+            const type = obstacleTypes[getRandomInt(0, obstacleTypes.length - 1)];
+            let newObstacle;
+
+            if (type === 'ground') {
+                // 地面障害物（飛ぶ・飛ばないのランダム性はここにはないが、プテラと混ぜる）
+                newObstacle = {
+                    type: 'ground',
+                    x: canvas.width,
+                    y: 270,
+                    width: 30,
+                    height: 30,
+                    color: '#ff3333', // 赤い四角
+                };
+            } else if (type === 'ptera') {
+                // 反対側（右側上空）から飛んでくるプテラノドン
+                newObstacle = {
+                    type: 'ptera',
+                    x: canvas.width,
+                    y: getRandomInt(100, 200), // 高さをランダムに
+                    width: 60,
+                    height: 40,
+                    color: '#8e44ad', // 紫の四角（飛んでいる）
+                    speedX: gameSpeed * 1.5, // プレイヤーに向かってくるので速め
+                };
+            }
+            obstacles.push(newObstacle);
+        }
+
+        function update() {
+            if (isStarted && !isGameOver) {
+                score++;
+
+                // プレイヤーの物理演算
+                player.vy += player.gravity;
+                player.y += player.vy;
+
+                // 地面判定
+                if (player.y >= groundLevel) {
+                    player.y = groundLevel;
+                    player.vy = 0;
+                    player.jumpCount = 0; // 地面に着いたらジャンプ回数リセット
+                }
+
+                // 障害物の生成（ランダムな間隔）
+                nextObstacleTimer--;
+                if (nextObstacleTimer <= 0) {
+                    createObstacle();
+                    // 次の間隔をスコアに応じて調整
+                    const minInterval = Math.max(30, 80 - Math.floor(score / 300));
+                    const maxInterval = Math.max(70, 160 - Math.floor(score / 300));
+                    nextObstacleTimer = getRandomInt(minInterval, maxInterval);
+                }
+
+                // 障害物の移動と判定
+                for (let i = obstacles.length - 1; i >= 0; i--) {
+                    if (obstacles[i].type === 'ground') {
+                        obstacles[i].x -= gameSpeed;
+                    } else if (obstacles[i].type === 'ptera') {
+                        obstacles[i].x -= obstacles[i].speedX; // プテラは独自の速度
+                    }
+
+                    // 衝突判定
+                    if (
+                        player.x < obstacles[i].x + obstacles[i].width &&
+                        player.x + player.width > obstacles[i].x &&
+                        player.y < obstacles[i].y + obstacles[i].height &&
+                        player.y + player.height > obstacles[i].y
+                    ) {
+                        isGameOver = true;
+                    }
+
+                    // 画面外削除
+                    if (obstacles[i].x + obstacles[i].width < 0) {
+                        obstacles.splice(i, 1);
+                    }
+                }
+
+                // スピードアップ
+                gameSpeed = 5 + Math.floor(score / 500);
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 地面
+            ctx.fillStyle = '#555';
+            ctx.fillRect(0, 330, canvas.width, 70);
+
+            // プレイヤー（画像）
+            if (imageLoaded) {
+                ctx.drawImage(charImage, player.x, player.y, player.width, player.height);
+            } else {
+                ctx.fillStyle = '#ff80bf';
+                ctx.fillRect(player.x, player.y, player.width, player.height);
+            }
+
+            // 障害物の描画（種類ごとに見た目を変える）
+            for (let obs of obstacles) {
+                ctx.fillStyle = obs.color;
+                ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+            }
+
+            // スコア
+            ctx.fillStyle = '#fff';
+            ctx.font = '20px sans-serif';
+            ctx.fillText(`SCORE: ${score}`, 20, 30);
+
+            // スタート前
+            if (!isStarted) {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#fff';
+                ctx.font = '28px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('クリック または スペースキーでスタート', canvas.width / 2, canvas.height / 2);
+                ctx.textAlign = 'left';
+            }
+
+            // ゲームオーバー
+            if (isGameOver) {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#fff';
+                ctx.font = '30px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2 - 15);
+                ctx.font = '16px sans-serif';
+                ctx.fillText('クリック または スペースキーでリトライ', canvas.width / 2, canvas.height / 2 + 25);
+                ctx.textAlign = 'left';
+            }
+        }
+
+        function loop() {
+            update();
+            draw();
+            requestAnimationFrame(loop);
+        }
+
+        loop();
+    </script>
 </body>
 </html>
